@@ -35,10 +35,12 @@ cache:
 
 jobs:
   include:
-    - script: COVERAGE=1 npm start test.node
+    - before_script: node scripts/test-runner-filter.js || travis_terminate 0
+      script: COVERAGE=1 npm start test.node
       after_success: npm start coveralls
 
     - &node
+      before_script: node scripts/test-runner-filter.js || travis_terminate 0
       script: npm start test.node
       node_js: '10'
 
@@ -48,8 +50,9 @@ jobs:
     - <<: *node
       node_js: '6'
 
-    - script: npm start test.bundle test.browser
-      install: npm ci # we need the native modules here
+    - install: npm ci # we need the native modules here
+      before_script: node scripts/test-runner-filter.js || travis_terminate 0
+      script: npm start test.bundle test.browser
       addons:
         artifacts:
           paths:
