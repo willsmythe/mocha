@@ -85,6 +85,8 @@ describe('XUnit reporter', function() {
 
   describe("on 'pending', 'pass' and 'fail' events", function() {
     it("should add test to tests called on 'end' event", function() {
+      // console.log = function() { } // to test
+
       var pendingTest = {
         name: 'pending',
         slow: function() {}
@@ -175,7 +177,7 @@ describe('XUnit reporter', function() {
         expect(expectedWrite, 'to be', expectedLine + '\n');
       });
     });
-    describe('if fileStream is falsy and stdout exists', function() {
+    describe('if fileStream is falsy', function() {
       it('should call write with line and new line', function() {
         stdoutWrite = process.stdout.write;
         process.stdout.write = function(string) {
@@ -193,18 +195,19 @@ describe('XUnit reporter', function() {
     describe('if fileStream is falsy and stdout does not exist', function() {
       it('should call write with line', function() {
         stdoutWrite = process;
+        var cachedWrite = process.stdout.write;
         process = false; // eslint-disable-line no-native-reassign, no-global-assign
-        var cachedConsoleLog = console.log;
-        console.log = function(string) {
+        // As we have stored a copy of console.log, force onto console.log branch but stub underlying mechanism
+        stdoutWrite.stdout.write = function(string) {
           stdout.push(string);
         };
 
         var xunit = new XUnit({on: function() {}, once: function() {}});
         xunit.write.call({fileStream: false}, expectedLine);
 
-        console.log = cachedConsoleLog;
+        stdoutWrite.stdout.write = cachedWrite;
         process = stdoutWrite; // eslint-disable-line no-native-reassign, no-global-assign
-        expect(stdout[0], 'to be', expectedLine);
+        expect(stdout[0], 'to be', expectedLine + '\n');
       });
     });
   });
