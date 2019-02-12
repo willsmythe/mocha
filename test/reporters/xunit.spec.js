@@ -85,8 +85,6 @@ describe('XUnit reporter', function() {
 
   describe("on 'pending', 'pass' and 'fail' events", function() {
     it("should add test to tests called on 'end' event", function() {
-      // console.log = function() { } // to test
-
       var pendingTest = {
         name: 'pending',
         slow: function() {}
@@ -177,7 +175,7 @@ describe('XUnit reporter', function() {
         expect(expectedWrite, 'to be', expectedLine + '\n');
       });
     });
-    describe('if fileStream is falsy', function() {
+    describe('if fileStream is falsy and stdout exists', function() {
       it('should call write with line and new line', function() {
         stdoutWrite = process.stdout.write;
         process.stdout.write = function(string) {
