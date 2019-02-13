@@ -193,19 +193,16 @@ describe('XUnit reporter', function() {
     describe('if fileStream is falsy and stdout does not exist', function() {
       it('should call write with line', function() {
         stdoutWrite = process;
-        var cachedWrite = process.stdout.write;
         process = false; // eslint-disable-line no-native-reassign, no-global-assign
-        // As we have stored a copy of console.log, force onto console.log branch but stub underlying mechanism
-        stdoutWrite.stdout.write = function(string) {
-          stdout.push(string);
-        };
 
         var xunit = new XUnit({on: function() {}, once: function() {}});
-        xunit.write.call({fileStream: false}, expectedLine);
+        xunit.write.call(
+          {fileStream: false, println: stdout.push.bind(stdout)},
+          expectedLine
+        );
 
-        stdoutWrite.stdout.write = cachedWrite;
         process = stdoutWrite; // eslint-disable-line no-native-reassign, no-global-assign
-        expect(stdout[0], 'to be', expectedLine + '\n');
+        expect(stdout[0], 'to be', expectedLine);
       });
     });
   });
