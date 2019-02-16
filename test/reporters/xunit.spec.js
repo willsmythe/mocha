@@ -195,11 +195,11 @@ describe('XUnit reporter', function() {
         stdoutWrite = process;
         process = false; // eslint-disable-line no-native-reassign, no-global-assign
 
-        var cachedPrintln = reporters.Base.println;
-        reporters.Base.println = stdout.push.bind(stdout);
+        var cachedPrintln = reporters.Base.log;
+        reporters.Base.log = stdout.push.bind(stdout);
         var xunit = new XUnit({on: function() {}, once: function() {}});
         xunit.write.call({fileStream: false}, expectedLine);
-        reporters.Base.println = cachedPrintln;
+        reporters.Base.log = cachedPrintln;
 
         process = stdoutWrite; // eslint-disable-line no-native-reassign, no-global-assign
         expect(stdout[0], 'to be', expectedLine);
