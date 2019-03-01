@@ -881,7 +881,7 @@ Test Filters
 
 Positional Arguments
   spec  One or more files, directories, or globs to test
-                                                    [array] [default: ["test/"]]
+                                                     [array] [default: ["test"]]
 
 Other Options
   --help, -h     Show usage information & exit                         [boolean]
